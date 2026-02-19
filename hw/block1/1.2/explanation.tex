@@ -1,0 +1,38 @@
+\documentclass[a4paper, 12pt]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb, amsthm}
+\usepackage{enumitem}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily}
+
+\newtheorem*{statement}{Statement}
+
+\begin{document}
+\lstMakeShortInline`
+
+\begin{enumerate}
+\item `x == 1, r_y == 0, r_z == 0` \\
+$A.1 \to B.1 \to A.2 \to B.2 \to A.3 \to B.3 \to A.4 \to B.4 \to A.5 \to B.5$.
+on `A.5` and `B.5` a data race occurs! In this case, we write the same value(1) to the `x`, just twice, therefore `x` will be 1. `y` and `z` remain 0, so `r_y` and `r_z` are zeroed as well.
+
+\item `x == 2, r_y == 0, r_z == 1` \\
+$A.1 \to B.1 \to B.2 \to A.2 \to A.3 \to B.3 \to A.4 \to A.5 \to B.4 \to B.5$.
+Using the fact that `x = 0`, we pass both `if`'s, then, in thread B, we read `x` into `z` only after updating `x` in the thread A, getting `z = 1; x = 1 + 1; r_z = 1`.
+\item `x == 1, r_y == 0, r_z == 1` \\
+\begin{statement}
+The trace of `x == 1, r_y == 0, r_z == 1` is impossible to occur in our case.
+\end{statement}
+\begin{proof}
+Let's assume there exists concurrent execution trace where `main` thread observes `x == 1, r_y == 0, r_z == 1`.
+\begin{enumerate}
+\item Then $B.5$ happened earlier than $A.5$. (for `r_y = y == 0`, `x` at $A.4$ must be equal to 0, therefore $A.5$ will write 1 to `x`. only after getting `r_y = 0` we can go to $B.5$, where we will get `x = 2`! However, we can pass that by executing $A.5$ after the $B.5$, so `x` becomes 1.)
+\item Then $A.5$ happened earlier than $B.4$. (we need to have `x` set to 1 to set `z` to 1 to set `r_z` to 1.).
+\item But also, according to program order, $B.4$ always happens earlier than $B.5$.
+\end{enumerate}
+Contradiction: $B.5$ happened earlier than $B.4$ vs. $B.4$ happened earlier than $B.5$. \\
+Therefore, it is impossible to observe `x == 1, r_y == 0, r_z == 1` when using interleaving model of execution.
+\end{proof}
+
+\end{enumerate}
+
+\end{document}
