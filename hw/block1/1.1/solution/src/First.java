@@ -8,11 +8,15 @@ public class First {
         Thread a = new Thread(() -> {
             System.out.println("in thread a");
             b.start();
+            try {
+                b.join();
+            } catch (InterruptedException e) {
+
+            }
+            ;
         });
 
         a.start();
         a.join();
-
-        System.out.println("done");
     }
 }

@@ -14,8 +14,16 @@ public class Second {
 
         }
         );
-        Thread d = new Thread(() -> System.out.println("in thread d"));
-        Thread a = new Thread(() -> {System.out.println("in thread a"); b.start();});
+
+        Thread a = new Thread(() -> {
+            System.out.println("in thread a");
+            b.start();
+            try {
+                b.join();
+            } catch (InterruptedException e) {
+
+            };
+        });
         a.start();
         a.join();
         c.start();

@@ -17,10 +17,20 @@ public class Third {
         Thread a = new Thread(() -> {
             System.out.println("in thread a");
             b.start();
+            try {
+                b.join();
+            } catch (InterruptedException e) {
+
+            };
         });
 
         Thread d = new Thread(() -> {
             System.out.println("in thread d");
+            try {
+                a.join();
+            } catch (InterruptedException e) {
+
+            }
         });
 
         d.start();
