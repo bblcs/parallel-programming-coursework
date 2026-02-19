@@ -1,0 +1,26 @@
+public class Second {
+    public static void main(String[] args) throws Exception {
+        Thread b = new Thread(() -> {
+            System.out.println("in thread b");
+            throw new RuntimeException("uncaught exception from b");
+        });
+
+        Thread c = new Thread(() -> {System.out.println("in thread c");
+            try {
+            b.join();
+            } catch (InterruptedException e) {
+
+            }
+
+        }
+        );
+        Thread d = new Thread(() -> System.out.println("in thread d"));
+        Thread a = new Thread(() -> {System.out.println("in thread a"); b.start();});
+        a.start();
+        a.join();
+        c.start();
+        c.join();
+
+        System.out.println("done");
+    }
+}
