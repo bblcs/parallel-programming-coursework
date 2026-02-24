@@ -1,0 +1,17 @@
+\documentclass[a4paper, 12pt]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb, amsthm}
+\usepackage{enumitem}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily}
+
+\begin{document}
+\lstMakeShortInline`
+Thread A `start`s B and `join`'s. Uncaught exception happens in thread B.
+\begin{enumerate}
+\item Thread B is terminated because of the uncaught exception.
+\item Thread A calls `join`, which just waits for B to die, which B does because of the uncaught exception. The uncaught exception is not propagated up(the handler is called, however, if present), and A continues normally.
+\item `b.join()` just waits for B to die, which already happened, so nothing happens.
+\item Nothing abnormal happens, D waits for A to die and continues execution.
+\end{enumerate}
+\end{document}
