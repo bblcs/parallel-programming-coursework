@@ -1,6 +1,9 @@
 package com.example;
 
 class MyReentrantLock {
+    private long START_DELAY = 5;
+    private long BASE = 2;
+    private long MAX_DELAY = 500;
     private Thread owner;
     private int count;
     private NonReentrantLock lock;
