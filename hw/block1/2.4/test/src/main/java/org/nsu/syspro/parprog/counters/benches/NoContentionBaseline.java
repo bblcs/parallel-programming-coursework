@@ -51,6 +51,36 @@ public class NoContentionBaseline {
         s.threadPrivateCounter++;
     }
 
+    @Benchmark
+    @Threads(1)
+    public long thread_private_plain_get1(ThreadState s) {
+        return s.threadPrivateCounter;
+    }
+
+    @Benchmark
+    @Threads(2)
+    public long thread_private_plain_get2(ThreadState s) {
+        return s.threadPrivateCounter;
+    }
+
+    @Benchmark
+    @Threads(4)
+    public long thread_private_plain_get4(ThreadState s) {
+        return s.threadPrivateCounter;
+    }
+
+    @Benchmark
+    @Threads(Threads.MAX)
+    public long thread_private_plain_getmax(ThreadState s) {
+        return s.threadPrivateCounter;
+    }
+
+    @Benchmark
+    @Threads(24) // 2 * Threads.MAX
+    public long thread_private_plain_getmaxmax(ThreadState s) {
+        return s.threadPrivateCounter;
+    }
+
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(NoContentionBaseline.class.getSimpleName())

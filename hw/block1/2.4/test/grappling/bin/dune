@@ -1,0 +1,4 @@
+(executable
+ (public_name grappling)
+ (name main)
+ (libraries grappling csv gnuplot))

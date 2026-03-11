@@ -1,0 +1,8 @@
+verify:
+    mvn clean verify
+
+bench: verify
+    /usr/lib/jvm/openjdk11/bin/java -jar target/benchmarks.jar -rf csv
+
+plot:
+    cd grappling; rm *.png; dune exec grappling && cd ..; feh ./grappling/*.png 

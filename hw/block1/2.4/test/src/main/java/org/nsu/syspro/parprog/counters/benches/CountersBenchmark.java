@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 7, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 7, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 @State(Scope.Benchmark)
 public class CountersBenchmark {
@@ -27,6 +27,7 @@ public class CountersBenchmark {
         Fair,
         Split_1,
         Split_2,
+        Split_12,
         Split_10000;
         // TODO: add more
 
@@ -42,6 +43,8 @@ public class CountersBenchmark {
                     return new SplitCounter(1);
                 case Split_2:
                     return new SplitCounter(2);
+                case Split_12:
+                    return new SplitCounter(12);
                 case Split_10000:
                     return new SplitCounter(10000);
                 default:
@@ -57,6 +60,7 @@ public class CountersBenchmark {
             "Fair",
             "Split_1",
             "Split_2",
+            "Split_12",
             "Split_10000",
     })
     String counterType;
@@ -89,6 +93,12 @@ public class CountersBenchmark {
     }
 
     @Benchmark
+    @Threads(8)
+    public void inc8() {
+        counterInstance.increment();
+    }
+
+    @Benchmark
     @Threads(Threads.MAX)
     public void incMax() {
         counterInstance.increment();
@@ -99,7 +109,45 @@ public class CountersBenchmark {
     public void incMaxMax() {
         counterInstance.increment();
     }
-    //endregion
+    // endregion
+
+    // region get
+    @Benchmark
+    @Threads(1)
+    public long get1() {
+        return counterInstance.get();
+    }
+
+    @Benchmark
+    @Threads(2)
+    public long get2() {
+        return counterInstance.get();
+    }
+
+    @Benchmark
+    @Threads(4)
+    public long get4() {
+        return counterInstance.get();
+    }
+
+    @Benchmark
+    @Threads(8)
+    public long get8() {
+        return counterInstance.get();
+    }
+
+    @Benchmark
+    @Threads(Threads.MAX)
+    public long getMax() {
+        return counterInstance.get();
+    }
+
+    @Benchmark
+    @Threads(24) // should 2 * Threads.MAX
+    public long getMaxMax() {
+        return counterInstance.get();
+    }
+    // endregion
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()

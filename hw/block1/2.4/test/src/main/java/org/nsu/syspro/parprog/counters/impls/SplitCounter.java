@@ -1,19 +1,50 @@
 package org.nsu.syspro.parprog.counters.impls;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 public class SplitCounter implements Counter {
+    private final int GRANULARITY;
+    private final ReentrantLock[] locks;
+    private long[] counters;
 
     public SplitCounter(int GRANULARITY) {
-        // TODO: implement me
+        this.locks = new ReentrantLock[GRANULARITY];
+        for (int i = 0; i < GRANULARITY; i++) {
+            this.locks[i] = new ReentrantLock();
+        }
+        this.counters = new long[GRANULARITY];
+        this.GRANULARITY = GRANULARITY;
     }
 
     @Override
     public void increment() {
-        // TODO: implement me
+        int idx = (int) Thread.currentThread().getId() % GRANULARITY;
+        ReentrantLock lock = locks[idx];
+        lock.lock();
+        try {
+            counters[idx]++;
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public long get() {
-        // TODO: implement me
-        return 0;
+        int acquired = 0;
+        for (ReentrantLock lock : locks) {
+            lock.lock();
+            acquired++;
+        }
+        try {
+            long sum = 0;
+            for (long c : counters) {
+                sum += c;
+            }
+            return sum;
+        } finally {
+            for (int i = 0; i < acquired; i++) {
+                locks[i].unlock();
+            }
+        }
     }
 }
