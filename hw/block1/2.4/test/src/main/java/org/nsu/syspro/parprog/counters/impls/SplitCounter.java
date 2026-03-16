@@ -30,20 +30,20 @@ public class SplitCounter implements Counter {
 
     @Override
     public long get() {
-        int acquired = 0;
-        for (ReentrantLock lock : locks) {
-            lock.lock();
-            acquired++;
-        }
         try {
+            for (ReentrantLock lock : locks) {
+                lock.lock();
+            }
             long sum = 0;
             for (long c : counters) {
                 sum += c;
             }
             return sum;
         } finally {
-            for (int i = 0; i < acquired; i++) {
-                locks[i].unlock();
+            for (int i = 0; i < GRANULARITY; i++) {
+                if (locks[i].isHeldByCurrentThread()) {
+                    locks[i].unlock();
+                }
             }
         }
     }
