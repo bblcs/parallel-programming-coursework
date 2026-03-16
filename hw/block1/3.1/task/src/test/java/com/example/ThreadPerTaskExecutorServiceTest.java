@@ -1,13 +1,19 @@
 package com.example;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.HashSet;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadFactory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class ThreadPerTaskExecutorServiceTest {
     private ThreadPerTaskExecutorService executor;
@@ -95,5 +101,22 @@ class ThreadPerTaskExecutorServiceTest {
         caller.join();
         assertFalse(flag);
         assertTrue(future.isDone());
+    }
+
+    @Test
+    void eachTaskInSeparateThread() throws ExecutionException {
+        HashSet<JoinFuture<Boolean>> fs = new HashSet<>();
+        ConcurrentLinkedQueue<Thread> q = new ConcurrentLinkedQueue<>();
+        for (int i = 0; i < 12; i++) {
+            fs.add(executor.submit(() -> {
+                return q.add(Thread.currentThread());
+            }));
+        }
+
+        for (JoinFuture<Boolean> f : fs) {
+            assertTrue(f.get());
+        }
+
+        assertEquals(12, q.size());
     }
 }
