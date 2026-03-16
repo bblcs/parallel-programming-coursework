@@ -31,14 +31,14 @@ class CondVarFuture<V> {
      * 
      */
     public V get() throws ExecutionException {
+        boolean wasInterrupted = false;
         lock.lock();
         try {
             while (!done) {
                 try {
                     cond.await();
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    continue;
+                    wasInterrupted = true;
                 }
             }
             if (exception != null) {
@@ -47,6 +47,9 @@ class CondVarFuture<V> {
 
             return result;
         } finally {
+            if (wasInterrupted) {
+                Thread.currentThread().interrupt();
+            }
             lock.unlock();
         }
     }
