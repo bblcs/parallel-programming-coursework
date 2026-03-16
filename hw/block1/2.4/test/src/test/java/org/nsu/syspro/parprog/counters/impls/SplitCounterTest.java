@@ -25,7 +25,7 @@ class SplitCounterTest {
 
     void stress(int threads, int iterations) {
 
-        SplitCounter counter = new SplitCounter(threads);
+        SplitCounter counter = new SplitCounter(threads, 8);
         MyThreadFactory factory = new MyThreadFactory();
         ArrayList<Thread> threadList = new ArrayList<>();
 

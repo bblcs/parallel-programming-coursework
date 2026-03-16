@@ -3,16 +3,22 @@ package org.nsu.syspro.parprog.counters.impls;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class SplitCounter implements Counter {
+    private final int PADDING;
     private final int GRANULARITY;
     private final ReentrantLock[] locks;
     private long[] counters;
 
     public SplitCounter(int GRANULARITY) {
+        this(GRANULARITY, 1);
+    }
+
+    public SplitCounter(int GRANULARITY, int PADDING) {
+        this.PADDING = PADDING;
         this.locks = new ReentrantLock[GRANULARITY];
         for (int i = 0; i < GRANULARITY; i++) {
             this.locks[i] = new ReentrantLock();
         }
-        this.counters = new long[GRANULARITY];
+        this.counters = new long[GRANULARITY * PADDING];
         this.GRANULARITY = GRANULARITY;
     }
 
@@ -22,7 +28,7 @@ public class SplitCounter implements Counter {
         ReentrantLock lock = locks[idx];
         lock.lock();
         try {
-            counters[idx]++;
+            counters[idx * PADDING]++;
         } finally {
             lock.unlock();
         }
@@ -35,8 +41,8 @@ public class SplitCounter implements Counter {
                 lock.lock();
             }
             long sum = 0;
-            for (long c : counters) {
-                sum += c;
+            for (int i = 0; i < GRANULARITY; i++) {
+                sum += counters[i * PADDING];
             }
             return sum;
         } finally {

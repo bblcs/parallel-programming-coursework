@@ -28,7 +28,10 @@ public class CountersBenchmark {
         Split_1,
         Split_2,
         Split_12,
-        Split_10000;
+        Split_10000,
+        Split_Pad_1,
+        Split_Pad_2,
+        Split_Pad_12;
         // TODO: add more
 
         Counter createCounter() {
@@ -47,6 +50,12 @@ public class CountersBenchmark {
                     return new SplitCounter(12);
                 case Split_10000:
                     return new SplitCounter(10000);
+                case Split_Pad_1:
+                    return new SplitCounter(1, 8);
+                case Split_Pad_2:
+                    return new SplitCounter(2, 8);
+                case Split_Pad_12:
+                    return new SplitCounter(12, 8);
                 default:
                     throw new IllegalArgumentException("Unexpected counter type: " + this);
             }
@@ -55,13 +64,16 @@ public class CountersBenchmark {
 
     // Feel free to comment/uncomment to speed up the measurements
     @Param({
-            "Unsafe",
-            "Unfair",
-            "Fair",
-            "Split_1",
-            "Split_2",
-            "Split_12",
-            "Split_10000",
+            // "Unsafe",
+            // "Unfair",
+            // "Fair",
+            // "Split_1",
+            // "Split_2",
+            // "Split_12",
+            // "Split_10000",
+            "Split_Pad_1",
+            "Split_Pad_2",
+            "Split_Pad_12",
     })
     String counterType;
     Counter counterInstance;

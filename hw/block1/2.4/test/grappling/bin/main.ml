@@ -10,6 +10,9 @@ type counter_type =
   | Split_2
   | Split_12
   | Split_Alot
+  | Split_Pad_1
+  | Split_Pad_2
+  | Split_Pad_12
   | NoContentionBaseline
 
 let string_of_ctype ctype =
@@ -21,6 +24,9 @@ let string_of_ctype ctype =
   | Split_2 -> "Split-2"
   | Split_12 -> "Split-12"
   | Split_Alot -> "Split-Alot"
+  | Split_Pad_1 -> "Split-Pad-1"
+  | Split_Pad_2 -> "Split-Pad-2"
+  | Split_Pad_12 -> "Split-Pad-12"
   | NoContentionBaseline -> "NoContentionBaseline"
 
 type benchmark = {
@@ -70,6 +76,9 @@ let parse_row (row : string list) : benchmark option =
         | "Split_2" -> Split_2
         | "Split_12" -> Split_12
         | "Split_10000" -> Split_Alot
+        | "Split_Pad_1" -> Split_Pad_1
+        | "Split_Pad_2" -> Split_Pad_2
+        | "Split_Pad_12" -> Split_Pad_12
         | "" -> NoContentionBaseline
         | _ -> failwith "Unknown ctype"
       in
