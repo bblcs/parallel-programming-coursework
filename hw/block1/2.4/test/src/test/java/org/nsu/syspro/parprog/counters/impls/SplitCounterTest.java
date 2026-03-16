@@ -1,6 +1,8 @@
 package org.nsu.syspro.parprog.counters.impls;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -15,10 +17,13 @@ class SplitCounterTest {
 
     }
 
-    @Test
-    void stress() {
-        int threads = 12;
-        int iterations = 10000;
+    @ParameterizedTest
+    @CsvSource({ "1,10", "1,10000", "2,10", "2,10000", "4,10", "4,10000", "8,10", "8,10000", "12,10", "12,10000",
+            "12, 100000", "24,10", "24,10000"
+
+    })
+
+    void stress(int threads, int iterations) {
 
         SplitCounter counter = new SplitCounter(threads);
         MyThreadFactory factory = new MyThreadFactory();
