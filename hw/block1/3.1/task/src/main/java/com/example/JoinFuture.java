@@ -1,6 +1,5 @@
 package com.example;
 
-import java.lang.Thread.State;
 import java.util.concurrent.ExecutionException;
 
 class JoinFuture<V> {
@@ -49,6 +48,6 @@ class JoinFuture<V> {
      * an exception -- in all of these cases, this method will return true.
      */
     public boolean isDone() {
-        return thread.getState() == State.TERMINATED;
+        return !thread.isAlive();
     }
 }
