@@ -117,6 +117,6 @@ class ThreadPerTaskExecutorServiceTest {
             assertTrue(f.get());
         }
 
-        assertEquals(12, q.size());
+        assertEquals(12, (new HashSet<>(q).size()));
     }
 }
