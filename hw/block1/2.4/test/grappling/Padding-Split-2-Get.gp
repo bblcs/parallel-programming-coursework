@@ -1,0 +1,10 @@
+set terminal pngcairo size 1920,1080
+set output 'Padding-Split-2-Get.png'
+set title 'Padding-Split-2-Get'
+set xlabel 'Number of Threads'
+set xtics (1, 2, 4, 8, 12, 24)
+set ylabel 'Score'
+set yrange [0:*]
+set grid
+plot 'Padding-Split-2-Get.dat' index 0 title 'Split-02' with yerrorlines linewidth 2, \
+     'Padding-Split-2-Get.dat' index 1 title 'Split-Pad-02' with yerrorlines linewidth 2

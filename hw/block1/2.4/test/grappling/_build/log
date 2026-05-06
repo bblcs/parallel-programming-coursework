@@ -1,0 +1,17 @@
+# dune exec grappling
+# OCAMLPARAM: unset
+# Shared cache: enabled-except-user-rules
+# Shared cache location: /home/evlc/.cache/dune/db
+# Workspace root:
+# /home/evlc/dev/nsu/parallel_programming/hw/block1/2.4/test/grappling
+# Auto-detected concurrency: 12
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Dev
+#  ; merlin = true
+#  ; fdo_target_exe = None
+#  ; build_dir = In_build_dir "default"
+#  ; instrument_with = []
+#  }
+$ /home/evlc/.opam/default/bin/ocamlc.opt -config > /tmp/dune_f34ded_output
